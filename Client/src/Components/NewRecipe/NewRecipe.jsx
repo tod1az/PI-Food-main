@@ -1,6 +1,6 @@
 import styles from './newRecipe.module.css'
-import { useState,useEffect } from 'react'
-import {validateRecipe,validateSteps} from '../Validate'
+import { useState } from 'react'
+import {validateRecipe} from '../Validate'
 import{useDispatch,useSelector} from 'react-redux'
 import { postRecipe } from '../../Redux/actions'
 
@@ -11,8 +11,6 @@ const NewRecipe =()=>{
     const dispatch = useDispatch()
     const diets    = useSelector(state=>state.diets)
     
-    
-
     const [recipe, setRecipe] = useState({
         name:'',
         image:'',
@@ -37,17 +35,12 @@ const NewRecipe =()=>{
         }else {
             setRecipe({...recipe,diets:recipe.diets.filter(diet=>diet.id!==e.target.value)})
         }
-        console.log(recipe.diets)
     }
     //valida la info de los inputs
     const changeHandler =(e)=>{
         setRecipe({...recipe,[e.target.name]:e.target.value})
         setErrors(validateRecipe(recipe))
     }
-
-    
-
-
 
     //Determina el index de cada step
     
@@ -91,7 +84,6 @@ const NewRecipe =()=>{
             {steps.map((step,index)=>{
                  return <input key={index}  onChange={(e)=>stepsHandler(index,e)}/>
             })}
-           
             {errors.steps&&<p>{errors.steps}</p>}
 
             <label htmlFor='summary'>Summary: </label>

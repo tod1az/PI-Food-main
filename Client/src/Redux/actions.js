@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import { GET_DIETS,POST_RECIPE,GET_ALL,FILTER_DIETS,FILTER_BY_SOURCE,ORDER_BY_NAME,ORDER_BY_HEALTHSCORE, GET_BY_NAME} from './actionsType'
+import { GET_DIETS,POST_RECIPE,GET_ALL,FILTER_DIETS,FILTER_BY_SOURCE,ORDER_BY_NAME,ORDER_BY_HEALTHSCORE, GET_BY_NAME,GET_BY_ID,CLEAN_DETAIL} from './actionsType'
 
 // Trae todas las recetas, y las dietas
 const getAll =()=>{
@@ -18,6 +18,43 @@ const getAll =()=>{
   }
 }
 
+//Trae las recetas que coinciden con cierto nombre
+
+const getByName =(name)=>{
+  const endpoint ='http://localhost:3001/recipes?name='
+  return async (dispatch)=>{
+    try {
+      const response = await axios.get(`${endpoint}${name}`)
+      dispatch({
+        type:GET_BY_NAME,
+        payload:response.data
+      })
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+}
+
+//Trae una receta correspondiente a cierto id  
+
+const getById =(id)=>{
+  const endpoint = 'http://localhost:3001/recipes/'
+  return async (dispatch)=>{
+    try {
+      const response = await axios.get(`${endpoint}${id}`)
+      dispatch({
+        type:GET_BY_ID,payload:response.data
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+}
+//Clean Detail
+
+const clenDetail =()=>{
+  return { type:CLEAN_DETAIL,payload:null}
+}
 
 //Trae todas las dietas que contiene la db
 const getDiets = ()=>{
@@ -35,21 +72,6 @@ const getDiets = ()=>{
     }
         
   }  
-}
-//Trae las recetas que coinciden con cierto nombre
-
-const getByName =(name)=>{
-  return async (dispatch)=>{
-    try {
-      const response = await axios.get(`http://localhost:3001/recipes?name=${name}`)
-      dispatch({
-        type:GET_BY_NAME,
-        payload:response.data
-      })
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
 }
 
 
@@ -97,4 +119,4 @@ const orderByHealthScore =(orden)=>{
 
 
 
-export {getDiets,postRecipe,getAll,filterDiets,filterBySource,orderByName,orderByHealthScore,getByName} ;
+export {getDiets,postRecipe,getAll,filterDiets,filterBySource,orderByName,orderByHealthScore,getByName,getById,clenDetail} ;

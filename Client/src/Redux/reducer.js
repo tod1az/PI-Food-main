@@ -1,11 +1,12 @@
 
-import { GET_DIETS,POST_RECIPE,GET_ALL,FILTER_DIETS,FILTER_BY_SOURCE, ORDER_BY_NAME, ORDER_BY_HEALTHSCORE,GET_BY_NAME } from "./actionsType"
+import { GET_DIETS,POST_RECIPE,GET_ALL,FILTER_DIETS,FILTER_BY_SOURCE, ORDER_BY_NAME, ORDER_BY_HEALTHSCORE,GET_BY_NAME,GET_BY_ID,CLEAN_DETAIL } from "./actionsType"
 
 
 const initialState ={
     recipes:[],
     auxRecipes:[],
     diets:[],
+    detail:{}
 };
 
 const reducer =(state = initialState,{type,payload})=>{
@@ -36,8 +37,20 @@ const reducer =(state = initialState,{type,payload})=>{
         case GET_BY_NAME:
             return{
                 ...state,recipes:payload
+            };
+
+        case GET_BY_ID:
+            
+        return{
+            ...state,detail:payload
+        };
+
+        case CLEAN_DETAIL:
+            return{
+                ...state,detail:{}
             }
 
+            
         case FILTER_DIETS:
             let recipesFiltered = []; 
             if(payload==='All') recipesFiltered = state.auxRecipes;
