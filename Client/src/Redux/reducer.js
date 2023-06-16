@@ -1,5 +1,5 @@
 
-import { filterDiets } from "./actions";
+
 import { GET_DIETS,POST_RECIPE,GET_ALL,FILTER_DIETS,FILTER_BY_SOURCE, ORDER_BY_NAME, ORDER_BY_HEALTHSCORE,GET_BY_NAME,GET_BY_ID,CLEAN_DETAIL } from "./actionsType"
 
 
@@ -15,17 +15,17 @@ const initialState ={
 const reducer =(state = initialState,{type,payload})=>{
     switch(type){
         case GET_DIETS:
-        return{
-            ...state,diets:payload
-        };
+            return{
+                ...state,diets:payload
+            };
 
         case POST_RECIPE:
             const newRecipes = [...state.recipes]
             newRecipes.push(payload)
-        return{
-            ...state,recipes:newRecipes
-            ,auxRecipes:newRecipes
-        }; 
+            return{
+                ...state,recipes:newRecipes
+                ,auxRecipes:newRecipes
+            }; 
 
 
         case  GET_ALL:
@@ -43,9 +43,9 @@ const reducer =(state = initialState,{type,payload})=>{
 
         case GET_BY_ID:
             
-        return{
-            ...state,detail:payload
-        };
+            return{
+                ...state,detail:payload
+            };
 
         case CLEAN_DETAIL:
             return{
@@ -70,10 +70,10 @@ const reducer =(state = initialState,{type,payload})=>{
                 }
                 if(recipe.diets.includes(payload)) return recipe
             })
-        return{
-            ...state,
-            recipes:recipesFiltered,auxFilterDiet:recipesFiltered
-        }
+            return{
+                ...state,
+                recipes:recipesFiltered,auxFilterDiet:recipesFiltered
+            }
 
         case FILTER_BY_SOURCE:
             
