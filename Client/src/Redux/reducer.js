@@ -1,10 +1,13 @@
 
+import { filterDiets } from "./actions";
 import { GET_DIETS,POST_RECIPE,GET_ALL,FILTER_DIETS,FILTER_BY_SOURCE, ORDER_BY_NAME, ORDER_BY_HEALTHSCORE,GET_BY_NAME,GET_BY_ID,CLEAN_DETAIL } from "./actionsType"
 
 
 const initialState ={
     recipes:[],
     auxRecipes:[],
+    auxFilterSource:[],
+    auxFilterDiet:[],
     diets:[],
     detail:{}
 };
@@ -35,9 +38,8 @@ const reducer =(state = initialState,{type,payload})=>{
            
             }; 
         case GET_BY_NAME:
-            return{
-                ...state,recipes:payload
-            };
+            
+            return {...state,recipes:payload}
 
         case GET_BY_ID:
             
@@ -52,10 +54,17 @@ const reducer =(state = initialState,{type,payload})=>{
 
             
         case FILTER_DIETS:
+             
+            const stateCopy =state.auxFilterSource.length?[...state.auxFilterSource]:[...state.auxRecipes]
             let recipesFiltered = []; 
-            if(payload==='All') recipesFiltered = state.auxRecipes;
+            if(payload==='All'){
+                recipesFiltered = state.auxFilterSource.length?[...state.auxFilterSource]:stateCopy;
+                return{
+                    ...state,recipes:recipesFiltered,auxFilterDiet:[]
+                }
+            } 
 
-            else recipesFiltered=state.auxRecipes.filter((recipe)=>{
+            else recipesFiltered=stateCopy.filter((recipe)=>{
                 if(typeof recipe.id !== 'number'){
                     if(recipe.diets.find(diet=>diet.name===payload)) return recipe
                 }
@@ -63,12 +72,19 @@ const reducer =(state = initialState,{type,payload})=>{
             })
         return{
             ...state,
-            recipes:recipesFiltered
-        };
+            recipes:recipesFiltered,auxFilterDiet:recipesFiltered
+        }
 
         case FILTER_BY_SOURCE:
+            
+            const Copystate = state.auxFilterDiet.length?[...state.auxFilterDiet]:[...state.auxRecipes]
             let filteredBySource =[];
-            if(payload==='All') filteredBySource = state.auxRecipes;
+            if(payload==='All') {
+                filteredBySource = state.auxFilterDiet.length?[...state.auxFilterDiet]:Copystate;
+                return {
+                    ...state,recipes:filteredBySource,auxFilterSource:[]
+                }
+            }
             if(payload==='DB'){
                 filteredBySource=state.auxRecipes.filter(recipe=>typeof recipe.id !== 'number'||recipe.id===undefined)
             }
@@ -76,25 +92,29 @@ const reducer =(state = initialState,{type,payload})=>{
                 filteredBySource = state.auxRecipes.filter(recipe=>typeof recipe.id === 'number')
             }
             return{
-                ...state,recipes:filteredBySource
+                ...state,recipes:filteredBySource,auxFilterSource:filteredBySource
             };
 
         case ORDER_BY_NAME:
+            const globalRecipes =[...state.recipes]
             let orderedRecipes = [];
-            if(payload==='All')orderedRecipes=state.auxRecipes
-            if(payload==='A') orderedRecipes = state.recipes.sort((a,b)=> a.name.localeCompare(b.name))
-            if(payload==='D') orderedRecipes = state.recipes.sort((a,b)=> b.name.localeCompare(a.name))
+            if(payload==='Def')orderedRecipes = [...state.auxRecipes]
+            if(payload==='A')  orderedRecipes = globalRecipes.sort((a,b)=> a.name.localeCompare(b.name))
+            if(payload==='D')  orderedRecipes = globalRecipes.sort((a,b)=> b.name.localeCompare(a.name))
         
             return{
                 ...state,recipes:orderedRecipes
             };    
         case ORDER_BY_HEALTHSCORE:
             
+            const copyRecipes =[...state.recipes]
             let orderedByHealthScore = []
-            payload==='A'?orderedByHealthScore=state.recipes.sort((a,b)=>a.healthScore-b.healthScore):orderedByHealthScore=state.recipes.sort((a,b)=>b.healthScore-a.healthScore)
+            if(payload==='Def')orderedByHealthScore = [...state.auxRecipes]
+            if(payload==='A')  orderedByHealthScore=copyRecipes.sort((a,b)=>a.healthScore-b.healthScore);
+            if(payload==='D')  orderedByHealthScore=copyRecipes.sort((a,b)=>b.healthScore-a.healthScore)
             return{
                 ...state,recipes:orderedByHealthScore
-            }   
+            };   
         default:
             return {...state};
     }
