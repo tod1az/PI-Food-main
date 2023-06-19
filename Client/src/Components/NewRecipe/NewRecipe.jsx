@@ -1,20 +1,22 @@
 import styles from './newRecipe.module.css'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {validateRecipe} from '../Validate'
 import{useDispatch,useSelector} from 'react-redux'
 import { postRecipe } from '../../Redux/actions'
+import {useNavigate} from 'react-router-dom'
 
 
 
 const NewRecipe =()=>{
     
-    const dispatch = useDispatch()
-    const diets    = useSelector(state=>state.diets)
+    const dispatch = useDispatch();
+    const diets    = useSelector(state=>state.diets);
+    const navigate = useNavigate();
     
     const [recipe, setRecipe] = useState({
         name:'',
         image:'',
-        steps:[],
+        steps:[''],
         diets:[],
         summary:'',
         healthScore:0
@@ -28,44 +30,54 @@ const NewRecipe =()=>{
         summary:'',
         healthScore:''
     })
+    const [disableSubmit,setDisableSubmit] = useState(true);
+
+    const disableHandler =(errors)=>{
+        if(!recipe&&errors.name||errors.image||errors.steps||errors.diets||errors.summary||errors.healthScore){
+            setDisableSubmit(true)
+        }else setDisableSubmit(false)
+    }
     //Guarda las o elimina las dietas seleccionadas
     const dietHandler =(e)=>{
         if(e.target.checked){
             setRecipe({...recipe,diets:[...recipe.diets,{id:e.target.value,name:e.target.name}]})
+            setErrors(validateRecipe({...recipe,diets:[...recipe.diets,{id:e.target.value,name:e.target.name}]}))
+            disableHandler(validateRecipe({...recipe,diets:[...recipe.diets,{id:e.target.value,name:e.target.name}]}))
         }else {
             setRecipe({...recipe,diets:recipe.diets.filter(diet=>diet.id!==e.target.value)})
+            setErrors(validateRecipe({...recipe,diets:recipe.diets.filter(diet=>diet.id!==e.target.value)}))
+            disableHandler(validateRecipe({...recipe,diets:recipe.diets.filter(diet=>diet.id!==e.target.value)}))
         }
+       
     }
     //valida la info de los inputs
     const changeHandler =(e)=>{
         setRecipe({...recipe,[e.target.name]:e.target.value})
-        setErrors(validateRecipe(recipe))
+        setErrors(validateRecipe({...recipe,[e.target.name]:e.target.value}))
+        disableHandler(validateRecipe({...recipe,[e.target.name]:e.target.value}))
     }
 
-    //Determina el index de cada step
-    
-    const [steps,setSteps] = useState([''])
-
     const stepsHandler=(searchedIndex,e)=>{
-        setSteps(steps.map((step,index)=>{
+        const newSteps =recipe.steps.map((step,index)=>{
             if(index===searchedIndex){
-               
                 return e.target.value
             }
             return step
-        }))
-        setRecipe({...recipe,steps:steps})
+        })
+        setRecipe( {...recipe,steps:newSteps})
+        setErrors(validateRecipe({...recipe,steps:newSteps}))
+        disableHandler(validateRecipe({...recipe,steps:newSteps}))
     }
     //Se agrega un input extra por si el usuario lo requiere
     const addInput =()=>{
-        setSteps([...steps,''])
+        setRecipe({...recipe,steps:[...recipe.steps,'']})
     }
 
     const submitHandler=(e)=>{
         e.preventDefault()
         dispatch(postRecipe(recipe))
+        navigate('/home')
     }
-
 
     return(
         <div className={styles.formContainer}>
@@ -74,41 +86,39 @@ const NewRecipe =()=>{
             {/* Nombre, imagen, paso a paso, dietas,resumen */}
             <label htmlFor='name'>Name: </label>
             <input placeholder="Here goes your recipe's name" name='name' onChange={changeHandler}/>
-            {errors.name&&<p>{errors.name}</p>}
+            {errors.name&&<p className={styles.errors}>{errors.name}</p>}
 
             <label htmlFor='Image'>Image(url): </label>
             <input type="text" placeholder='httsp://yourimage.com' name='image' onChange={changeHandler} />
-            {errors.image&&<p>{errors.image}</p>}
+            {errors.image&&<p className={styles.errors} >{errors.image}</p>}
 
-            <label htmlFor='steps'>Step by step proccess:<button type='button' onClick={()=>addInput()} >+</button> </label> 
-            {steps.map((step,index)=>{
-                 return <input key={index}  onChange={(e)=>stepsHandler(index,e)}/>
+            <label htmlFor='steps'>Step by step process<button type='button' className={styles.button} onClick={()=>addInput()} >+</button> </label> 
+            {recipe.steps.map((step,index)=>{
+                 return <input placeholder='Step:example' key={index} value={step} onChange={(e)=>stepsHandler(index,e)}/>
             })}
-            {errors.steps&&<p>{errors.steps}</p>}
+            {errors.steps&&<p className={styles.errors} >{errors.steps}</p>}
 
             <label htmlFor='summary'>Summary: </label>
-            <input type="text" name='summary' onChange={changeHandler}/>
-            {errors.summary&&<p>{errors.summary}</p>}
+            <textarea type="text" name='summary' onChange={changeHandler}/>
+            {errors.summary&&<p className={styles.errors} >{errors.summary}</p>}
 
             <label htmlFor='healtScore'>Health Score: </label>
             <input type="text" name='healthScore' onChange={changeHandler}/>
-            {errors.healthScore&&<p>{errors.healthScore}</p>}
+            {errors.healthScore&&<p className={styles.errors} >{errors.healthScore}</p>}
 
              {/* dietas */}
-          
+            <label>Diets</label>
                 {diets.map((diet,index)=>{
                     return <div  key={index+200} className={styles.diets}>
                                 <label htmlFor={diet.name} key={index+100}>{diet.name}</label>
                                 <input type="checkbox" key={index} onChange={dietHandler}name={diet.name} value={diet.id} />
-                                {console.log(diet.id)}
                            </div>
                 })}
-             
-            <button  className={styles.submit} type='submit' onClick={()=>console.log('submiteado')}>Submit: </button>
+             {errors.diets!==''&&<p className={styles.errors} >{errors.diets}</p>}
+            <button disabled={disableSubmit} className={styles.submit} type='submit' onClick={()=>console.log('submiteado')}>Submit: </button>
         </form>
         </div>
     )
-
 }
 
 export default NewRecipe;

@@ -1,13 +1,14 @@
 
 
-import { GET_DIETS,POST_RECIPE,GET_ALL,FILTER_DIETS,FILTER_BY_SOURCE, ORDER_BY_NAME, ORDER_BY_HEALTHSCORE,GET_BY_NAME,GET_BY_ID,CLEAN_DETAIL } from "./actionsType"
+import { GET_DIETS,POST_RECIPE,GET_ALL,FILTER_DIETS,FILTER_BY_SOURCE, ORDER_BY_NAME, ORDER_BY_HEALTHSCORE,GET_BY_NAME,GET_BY_ID,CLEAN_DETAIL,RESTORE } from "./actionsType"
 
 
 const initialState ={
     recipes:[],
+    searchedRecipes:[],
     auxRecipes:[],
-    auxFilterSource:[],
-    auxFilterDiet:[],
+    currentSource:'All',
+    currentDiets:'All',
     diets:[],
     detail:{}
 };
@@ -39,8 +40,11 @@ const reducer =(state = initialState,{type,payload})=>{
             }; 
         case GET_BY_NAME:
             
-            return {...state,recipes:payload}
-
+            return {...state,recipes:payload,searchedRecipes:payload};
+        
+        case RESTORE:
+            return {...state,recipes:state.auxRecipes,searchedRecipes:[]};    
+            
         case GET_BY_ID:
             
             return{
@@ -55,45 +59,75 @@ const reducer =(state = initialState,{type,payload})=>{
             
         case FILTER_DIETS:
              
-            const stateCopy =state.auxFilterSource.length?[...state.auxFilterSource]:[...state.auxRecipes]
+            const allrecipes = state.searchedRecipes.length!==0?[...state.searchedRecipes]:[...state.auxRecipes]    
             let recipesFiltered = []; 
             if(payload==='All'){
-                recipesFiltered = state.auxFilterSource.length?[...state.auxFilterSource]:stateCopy;
+                    
+                    if(state.currentSource==='DB')recipesFiltered=allrecipes.filter(recipe=>typeof recipe.id !=='number');
+                   
+                    if(state.currentSource==='API')recipesFiltered=allrecipes.filter(recipe=>typeof recipe.id==='number');
+                    
+                    if(state.currentSource==='All')recipesFiltered=allrecipes;        
+                    
                 return{
-                    ...state,recipes:recipesFiltered,auxFilterDiet:[]
+                    ...state,recipes:recipesFiltered,currentDiets:payload
                 }
             } 
-
-            else recipesFiltered=stateCopy.filter((recipe)=>{
-                if(typeof recipe.id !== 'number'){
+            else recipesFiltered=allrecipes.filter((recipe)=>{
+               
+                if(state.currentSource==='DB'||state.currentSource==='All'&&typeof recipe.id !== 'number'){
                     if(recipe.diets.find(diet=>diet.name===payload)) return recipe
                 }
-                if(recipe.diets.includes(payload)) return recipe
+                if(state.currentSource==='API'||state.currentSource==='All'&&typeof recipe.id ==='number') {
+                    if(recipe.diets.includes(payload))return recipe
+                }
             })
             return{
                 ...state,
-                recipes:recipesFiltered,auxFilterDiet:recipesFiltered
+                recipes:recipesFiltered,currentDiets:payload
             }
 
         case FILTER_BY_SOURCE:
             
-            const Copystate = state.auxFilterDiet.length?[...state.auxFilterDiet]:[...state.auxRecipes]
+            const Copystate = state.searchedRecipes.length!==0?[...state.searchedRecipes]:[...state.auxRecipes]
             let filteredBySource =[];
             if(payload==='All') {
-                filteredBySource = state.auxFilterDiet.length?[...state.auxFilterDiet]:Copystate;
+                if(state.currentDiets==='All')filteredBySource = Copystate;
+                else{
+                    filteredBySource = Copystate.filter(recipe=>{
+                        if(typeof recipe.id === 'number'){
+                            if(recipe.diets.includes(state.currentDiets))return recipe
+                        }else if(recipe.diets.find(diet=>diet.name===state.currentDiets)) return recipe
+                    })
+                }
+
                 return {
-                    ...state,recipes:filteredBySource,auxFilterSource:[]
+                    ...state,recipes:filteredBySource,currentSource:payload
                 }
             }
-            if(payload==='DB'){
-                filteredBySource=state.auxRecipes.filter(recipe=>typeof recipe.id !== 'number'||recipe.id===undefined)
-            }
-            if(payload==='API'){
-                filteredBySource = state.auxRecipes.filter(recipe=>typeof recipe.id === 'number')
-            }
-            return{
-                ...state,recipes:filteredBySource,auxFilterSource:filteredBySource
-            };
+
+                if(state.currentDiets==='All'){
+                    if(payload==='DB'){
+                            filteredBySource=Copystate.filter(recipe=>typeof recipe.id !== 'number')
+                    }
+                    if(payload==='API'){
+                            filteredBySource = Copystate.filter(recipe=>typeof recipe.id === 'number')
+                    }
+                }else{
+
+                    if(payload==='DB'){
+                        filteredBySource=Copystate.filter(recipe=>typeof recipe.id !== 'number'&&recipe.diets.find(diet=>diet.name===state.currentDiets))
+                    }
+                    if(payload==='API'){
+                        filteredBySource = Copystate.filter(recipe=>typeof recipe.id === 'number'&&recipe.diets.includes(state.currentDiets))
+                    }
+                }
+                return{
+                        ...state,recipes:filteredBySource,currentSource:payload
+                };
+            
+           
+            
 
         case ORDER_BY_NAME:
             const globalRecipes =[...state.recipes]

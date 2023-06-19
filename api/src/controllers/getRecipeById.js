@@ -3,6 +3,7 @@ require('dotenv').config();
 const {API_KEY} = process.env;
 const {Recipe,Diet} = require('../db');
 const {recipeCleaner} = require('../Helpers/Cleanners')
+const apiRecipes = require('../allApiRecipes')
 
 
 const URL ='https://api.spoonacular.com/recipes/'
@@ -26,10 +27,16 @@ const  getRecipeById =  async(id)=>{
         })
         return recipe
     }else {
-        const {data} = await axios.get(`${URL}${id}/information?apiKey=${API_KEY}`)
-        const cleanData = recipeCleaner(data)
-            
-        return cleanData
+
+        //si no funciona la api
+        let cleanData = apiRecipes.map((recipe)=>recipeCleaner(recipe))
+        cleanData = cleanData.filter(recipe=>recipe.id===Number(id))
+   
+        //si funciona la api estas dos lineas 
+        // const {data} = await axios.get(`${URL}${id}/information?apiKey=${API_KEY}`)
+        // const cleanData = recipeCleaner(data)
+        // return cleanData    
+        return cleanData[0]
     } 
 }
 module.exports = getRecipeById;

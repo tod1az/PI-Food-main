@@ -1,6 +1,6 @@
 import styles from './Home.module.css'
 import {useSelector,useDispatch} from 'react-redux'
-import {filterDiets,filterBySource,orderByName,orderByHealthScore} from '../../Redux/actions'
+import {filterDiets,filterBySource,orderByName,orderByHealthScore, getAll} from '../../Redux/actions'
 import { useState,useEffect} from 'react';
 import CardContainer from '../CardContainer/CardContainer';
 
@@ -11,12 +11,12 @@ const Home =()=>{
 
     const dietFilterHandler =(e)=>{
         dispatch(filterDiets(e.target.value))
-        
+        paginate();
     }
 
     const sourceFilterHandler =(e)=>{
         dispatch(filterBySource(e.target.value))
-        
+        paginate();
     }
 
     const nameOrderHandler =(e)=>{
@@ -46,13 +46,14 @@ const Home =()=>{
       //agrego la cantidad de botones necesarios de acuerdo a la cantidad de recetas 
       //para que se muestren nueve por pagina
       let numeros = []
-      const paginas = Math.ceil(recipes.length/9)
+      const paginas = Math.ceil(recipes.length/show)
       for (let i = 1; i <= paginas; i++) {
         numeros.push(i)
       }
       setPag(numeros)
-      setCurrentRecipes(recipes.slice(0,9))
+      setCurrentRecipes(recipes.slice(0,show))
       setCurrentPage(1)
+      setDisablePrevious(true)
     }
 
     const buttonHandler =(num)=>{
@@ -66,13 +67,19 @@ const Home =()=>{
           setDisableNext(true)
         }else setDisableNext(false)
     }
+
     useEffect(()=>{
-        paginate();
+        paginate()
     },[recipes])
+
+
+    useEffect(()=>{
+        dispatch(getAll())
+    },[dispatch])
 
     //===========================================//
     return(
-        <div className={styles.title}>
+        <div className={styles.home}>
             <select  onChange={dietFilterHandler}>
                 <option value='All' >All</option>
                 {dietas.map((diet,index)=>{
@@ -96,14 +103,13 @@ const Home =()=>{
             </select>
             <h1>Henry Food</h1>
             <CardContainer currentRecipes ={currentRecipes}/>
-            {recipes.length>=9&&<div className={styles.buttons}>
-                <button  disabled={disablePrevious} onClick={()=>buttonHandler(currentPage-1)} name='prev'>Previous</button>
-                    {pag.map((num,index)=>(<button  key={index} onClick={(e)=>buttonHandler(num,e)}>{num}</button>))}
-                <button  disabled={disableNext} onClick={()=>buttonHandler(currentPage+1)} name='next'>Next</button>  
+            {recipes.length>=9&&<div className={styles.buttonContainer}>
+                <button  className={styles.button} disabled={disablePrevious} onClick={()=>buttonHandler(currentPage-1)} name='prev'>Previous</button>
+                    {pag.map((num,index)=>(<button className={currentPage===num?styles.selected:styles.button} key={index} onClick={(e)=>buttonHandler(num,e)}>{num}</button>))}
+                <button  className={styles.button} disabled={disableNext} onClick={()=>buttonHandler(currentPage+1)} name='next'>Next</button>  
             </div>}
         </div>
     )
 }
-
 
 export default Home;

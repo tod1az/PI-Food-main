@@ -5,12 +5,20 @@ const {Recipe,Diet}   = require('../db');
 const{Op} = require('sequelize');
 const URL ='https://api.spoonacular.com/recipes/complexSearch?number=100&addRecipeInformation=true'
 const {recipeCleaner} = require('../Helpers/Cleanners')
+const resultsApi = require('../allApiRecipes')
 
 const getRecipeByName =async(name)=>{
+
+
+//Trayendo las recetas desde un archivo
+const apiRecipes = resultsApi.map((recipe)=>recipeCleaner(recipe))
+
 //Peticion a la api de las 100 recetas con las que estamos trabajando      
-const {data} = await axios.get(`${URL}&apiKey=${API_KEY}`)
+//const {data} = await axios.get(`${URL}&apiKey=${API_KEY}`)
 //Seleccion de datos
-const apiRecipes = data.results.map((recipe)=>recipeCleaner(recipe))
+//const apiRecipes = data.results.map((recipe)=>recipeCleaner(recipe))
+
+
         if(name){
                 const lowerCasedName=name.toLowerCase();
                 apiRecipesFiltered = apiRecipes.filter((recipe)=>recipe.name.toLowerCase().includes(lowerCasedName))
@@ -54,4 +62,3 @@ const apiRecipes = data.results.map((recipe)=>recipeCleaner(recipe))
 
 module.exports = getRecipeByName
 
-// /recipes/autocomplete?number=10&query=chick&apiKey=197f424a786e461397b3fe47d8ac3721

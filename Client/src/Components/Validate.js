@@ -8,36 +8,41 @@ const validateRecipe =({name,image,diets,summary,steps,healthScore})=>{
         healthScore:''
     }
     if(name===''){
-        errors.name='Debe tener un nombre'
+        errors.name='Must have a name'
+    }
+    const tieneNumeros = /^[^\d]+$/
+    if(!tieneNumeros.test(name)&&name!==''){
+        errors.name="The recipe name can not contain numbers"
     }
     if(image===''){
-        errors.image='Debe tener una imagen'
-        
+        errors.image='Must have an image'
     }
     if(diets.length===0){
-        errors.diets='Debe seleccionar al menos una dieta'
+
+        errors.diets='Must select at least one diet'
     }
     if(summary===''){
-        errors.summary='Debe tener un resumen'
+        errors.summary='Must have summary'
     }
-    if(healthScore===0){
-        errors.healthScore='Debe tener un Health Score'
+    if(healthScore===0||healthScore===''){
+        errors.healthScore='Must have Health Score'
+    }
+    if(healthScore>100||healthScore<0){
+        errors.healthScore='Out of range, must be between 0 and 100'
+    }
+
+    //revisar que los elementos del array tengan al menos un elemento que tenga un string dentro 
+
+    let stepsFlag = false;
+    steps.map(step=>{
+        if(step!=='') stepsFlag=true
+    })
+    if(stepsFlag===false){
+        errors.steps = 'Must have at least one step'
     }
     
     return errors
 }
 
-const objToArray=(array)=>{
-    let newArray=[]
-    for(let index in array){
-        newArray.push(array[index])
-    }
-    return newArray;
-}
 
-const validateSteps=(steps)=>{
-    let stepsArray = objToArray(steps)
-    if(!stepsArray.length)return 'Debe tener al menos un paso!'
-    return ''
-}
-export  {validateRecipe,validateSteps};
+export  {validateRecipe};

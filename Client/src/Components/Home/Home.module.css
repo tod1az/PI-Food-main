@@ -1,7 +1,23 @@
-.title{
+.home{
     position: relative;
-    top : 50px
+    top : 50px;
+    color:black
 }
-.buttons{
+.buttonContainer{
     margin-bottom: 50px;
+}
+.button{
+    padding: 0.6em 1.2em;
+    margin-bottom: 50px;
+}
+.button:disabled{
+    
+    background-color: grey;
+}
+.selected{
+    scale :1.2;
+    padding: 0.6em 1.2em;
+    background-color: aliceblue;
+    color: black;
+    border: 2px solid black;
 }

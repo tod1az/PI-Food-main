@@ -1,11 +1,13 @@
 import styles from './CardContainer.module.css'
 import Card from '../Card/Card'
+import image from '../../Assets/404.avif'
 
 const  CardContainer =({currentRecipes})=>{ 
     return(
            <div className={styles.container}>
-             {currentRecipes.map((card,index)=>{
-                  return <div key={index}>
+             {currentRecipes.length>0?
+             currentRecipes.map((card,index)=>{
+                  return <div  key={index}>
                            <Card
                              image={card.image}
                               id={card.id}
@@ -15,9 +17,14 @@ const  CardContainer =({currentRecipes})=>{
                               healthScore={card.healthScore}
                             />
                           </div>
-              })}
+              }):
+              
+              <div className={styles.card}>
+                <h1>Recipe not found</h1>
+                <img className={styles.img} src={image} alt='' />
+              </div>
+              }
            </div>
-
     )
 }
 export default CardContainer

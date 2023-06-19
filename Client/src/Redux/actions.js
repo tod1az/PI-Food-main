@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import { GET_DIETS,POST_RECIPE,GET_ALL,FILTER_DIETS,FILTER_BY_SOURCE,ORDER_BY_NAME,ORDER_BY_HEALTHSCORE, GET_BY_NAME,GET_BY_ID,CLEAN_DETAIL} from './actionsType'
+import { GET_DIETS,POST_RECIPE,GET_ALL,FILTER_DIETS,FILTER_BY_SOURCE,ORDER_BY_NAME,ORDER_BY_HEALTHSCORE, GET_BY_NAME,GET_BY_ID,CLEAN_DETAIL,RESTORE} from './actionsType'
 
 // Trae todas las recetas, y las dietas
 const getAll =()=>{
@@ -33,6 +33,11 @@ const getByName =(name)=>{
       console.log(error.message)
     }
   }
+}
+//Restaura todas las recetas despues de realizar una busqueda 
+
+const restore =()=>{
+  return {type:RESTORE, payload:null}
 }
 
 //Trae una receta correspondiente a cierto id  
@@ -119,4 +124,4 @@ const orderByHealthScore =(orden)=>{
 
 
 
-export {getDiets,postRecipe,getAll,filterDiets,filterBySource,orderByName,orderByHealthScore,getByName,getById,clenDetail} ;
+export {getDiets,postRecipe,getAll,filterDiets,filterBySource,orderByName,orderByHealthScore,getByName,getById,clenDetail,restore} ;
