@@ -6,15 +6,16 @@ import { useEffect } from 'react'
 
 const Landing =()=>{
     const dispatch = useDispatch()
-    
     useEffect(()=>{
         dispatch(getAll())
     },[dispatch])
     return(
         <div className={styles.landing}>
             <h1>Bienvenido a Henry Food</h1>
-            <NavLink  to ='/home'  >Entrar</NavLink> {/*Estilar esto como boton*/} 
+            <NavLink to ='/home' >
+                    Entrar 
+            </NavLink>
         </div>
     )
 }
-export default Landing ;
+export default Landing;

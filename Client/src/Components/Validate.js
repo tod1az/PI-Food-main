@@ -1,4 +1,5 @@
 const validateRecipe =({name,image,diets,summary,steps,healthScore})=>{
+    healthScore = Number(healthScore)
     let errors={
         name:'',
         image:'',
@@ -30,7 +31,9 @@ const validateRecipe =({name,image,diets,summary,steps,healthScore})=>{
     if(healthScore>100||healthScore<0){
         errors.healthScore='Out of range, must be between 0 and 100'
     }
-
+    if(isNaN(healthScore)) {
+        errors.healthScore ='Health Score must be a number'
+    }
     //revisar que los elementos del array tengan al menos un elemento que tenga un string dentro 
 
     let stepsFlag = false;

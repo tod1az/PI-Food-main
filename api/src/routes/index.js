@@ -17,9 +17,9 @@ router.get('/recipes/:idRecipe',async (req,res)=>{
     const {idRecipe} = req.params
     try {
         const recipe = await getRecipe(idRecipe)
-        res.status(200).json(recipe)
+        return res.status(200).json(recipe)
     } catch (error) {
-        res.status(500).json(error.message)
+        return res.status(500).json(error.message)
     }
 })
 //Recibe un nombre por query y responde con todas las recetas
@@ -28,28 +28,28 @@ router.get('/recipes', async(req,res)=>{
     const {name} = req.query
     try {
         const recipes = await getRecipeByName(name)
-        res.status(200).json(recipes)
+        return res.status(200).json(recipes)
     } catch (error) {
-        res.status(500).json(error.message)
+        return res.status(500).json(error.message)
     }
 })
 //Responde con todos las dietas registradas en la db
 router.get('/diets', async(req,res)=>{
     try {
         const diets = await getDiets();
-        res.status(200).json(diets)
+        return res.status(200).json(diets)
     } catch (error) {
-        res.json(error.message)
+        return res.json(error.message)
     }
 })
 //trae las 100 recetas 
 router.get('/start',async(req,res)=>{
     try {
         const allrecipes = await start();
-        res.status(200).json(allrecipes)
+        return res.status(200).json(allrecipes)
     } catch (error) {
-        res.json(error.message)
-        console.log(error.message)
+        return res.status(400).json(error.message)
+        
     }
 })
 //Agrega un receta con los datos recibidos por body en la request 
@@ -57,10 +57,9 @@ router.post('/recipes',async(req,res)=>{
     const {name,image,summary,healthScore,steps,diets} = req.body;
     try {
         const  creada = await addRecipe(name,image,summary,healthScore,steps,diets)
-        res.status(200).json(creada)
+        return res.status(200).json(creada)
     } catch (error) {
-        console.log(error.message)
-        res.json(error.message)
+        return res.json({error:error.message})
     }
 })
 

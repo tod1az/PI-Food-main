@@ -1,6 +1,5 @@
 import axios from 'axios'
-
-import { GET_DIETS,POST_RECIPE,GET_ALL,FILTER_DIETS,FILTER_BY_SOURCE,ORDER_BY_NAME,ORDER_BY_HEALTHSCORE, GET_BY_NAME,GET_BY_ID,CLEAN_DETAIL,RESTORE} from './actionsType'
+import { GET_DIETS,GET_ALL,FILTER_DIETS,FILTER_BY_SOURCE,ORDER_BY_NAME,ORDER_BY_HEALTHSCORE, GET_BY_NAME,GET_BY_ID,CLEAN_DETAIL,RESTORE,} from './actionsType'
 
 // Trae todas las recetas, y las dietas
 const getAll =()=>{
@@ -67,7 +66,6 @@ const getDiets = ()=>{
   return async (dispatch)=>{
     try {
         const response = await axios.get(endpoint)
-
         dispatch({
             type:GET_DIETS,
             payload:response.data,
@@ -77,25 +75,6 @@ const getDiets = ()=>{
     }
         
   }  
-}
-
-
-//Guarda una  receta en la db 
-const postRecipe =(recipe)=>{
-  const endpoint = 'http://localhost:3001/recipes'
-  return async(dispatch)=>{
-
-    try {
-      await axios.post(endpoint,recipe)
-      dispatch({
-        type:POST_RECIPE,
-        payload:recipe
-      })
-
-    } catch (error) {
-      console.log(error.message)
-    }
-  }
 }
 
 
@@ -124,4 +103,4 @@ const orderByHealthScore =(orden)=>{
 
 
 
-export {getDiets,postRecipe,getAll,filterDiets,filterBySource,orderByName,orderByHealthScore,getByName,getById,clenDetail,restore} ;
+export {getDiets,getAll,filterDiets,filterBySource,orderByName,orderByHealthScore,getByName,getById,clenDetail,restore} ;

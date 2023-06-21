@@ -1,15 +1,15 @@
 import styles from './newRecipe.module.css'
-import { useEffect, useState } from 'react'
+import {  useEffect, useState } from 'react'
 import {validateRecipe} from '../Validate'
 import{useDispatch,useSelector} from 'react-redux'
-import { postRecipe } from '../../Redux/actions'
 import {useNavigate} from 'react-router-dom'
+import axios from 'axios'
 
 
 
 const NewRecipe =()=>{
     
-    const dispatch = useDispatch();
+   
     const diets    = useSelector(state=>state.diets);
     const navigate = useNavigate();
     
@@ -33,7 +33,7 @@ const NewRecipe =()=>{
     const [disableSubmit,setDisableSubmit] = useState(true);
 
     const disableHandler =(errors)=>{
-        if(!recipe&&errors.name||errors.image||errors.steps||errors.diets||errors.summary||errors.healthScore){
+        if(errors.name||errors.image||errors.steps||errors.diets||errors.summary||errors.healthScore){
             setDisableSubmit(true)
         }else setDisableSubmit(false)
     }
@@ -72,12 +72,25 @@ const NewRecipe =()=>{
     const addInput =()=>{
         setRecipe({...recipe,steps:[...recipe.steps,'']})
     }
+    
+    
+    
+    const postHandler =async()=>{ 
+        const endpoint = 'http://localhost:3001/recipes'
+            const res = await axios.post(endpoint,recipe)
+            if(res.data.created){
+                alert(`The recipe ${res.data.name} has been successfully added`)
+                navigate('/home')
+            }else alert(`The recipe ${recipe.name} already exists`)
+    }
 
     const submitHandler=(e)=>{
         e.preventDefault()
-        dispatch(postRecipe(recipe))
-        navigate('/home')
+        postHandler();
     }
+
+
+   
 
     return(
         <div className={styles.formContainer}>
@@ -85,25 +98,25 @@ const NewRecipe =()=>{
             <h1>New Recipe</h1>
             {/* Nombre, imagen, paso a paso, dietas,resumen */}
             <label htmlFor='name'>Name: </label>
-            <input placeholder="Here goes your recipe's name" name='name' onChange={changeHandler}/>
+            <input placeholder="Here goes your recipe's name" name='name' value={recipe.name} onChange={changeHandler}/>
             {errors.name&&<p className={styles.errors}>{errors.name}</p>}
 
             <label htmlFor='Image'>Image(url): </label>
-            <input type="text" placeholder='httsp://yourimage.com' name='image' onChange={changeHandler} />
+            <input type="text" placeholder='httsp://yourimage.com' name='image' value={recipe.image} onChange={changeHandler} />
             {errors.image&&<p className={styles.errors} >{errors.image}</p>}
 
-            <label htmlFor='steps'>Step by step process<button type='button' className={styles.button} onClick={()=>addInput()} >+</button> </label> 
+            <label htmlFor='steps'>Step by step process<button type='button' className={styles.button}  onClick={()=>addInput()} >+</button> </label> 
             {recipe.steps.map((step,index)=>{
                  return <input placeholder='Step:example' key={index} value={step} onChange={(e)=>stepsHandler(index,e)}/>
             })}
             {errors.steps&&<p className={styles.errors} >{errors.steps}</p>}
 
             <label htmlFor='summary'>Summary: </label>
-            <textarea type="text" name='summary' onChange={changeHandler}/>
+            <textarea type="text" name='summary' value={recipe.summary} onChange={changeHandler}/>
             {errors.summary&&<p className={styles.errors} >{errors.summary}</p>}
 
             <label htmlFor='healtScore'>Health Score: </label>
-            <input type="text" name='healthScore' onChange={changeHandler}/>
+            <input type="text" name='healthScore' value={recipe.healthScore} onChange={changeHandler}/>
             {errors.healthScore&&<p className={styles.errors} >{errors.healthScore}</p>}
 
              {/* dietas */}

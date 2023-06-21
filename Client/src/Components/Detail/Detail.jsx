@@ -21,7 +21,7 @@ const Detail =()=>{
         <div>
            <div className={styles.head}>
                 {detail&&<h1>{name}</h1>}
-                {detail&&<p>Health Score:{healthScore}%</p>}
+                {detail&&<p className={healthScore<35?styles.red:healthScore>=35&&healthScore<50?styles.yellow:styles.green} >Health Score:{healthScore}%</p>}
            </div> 
         <div className={styles.detail}>
             <div className={styles.imageDiv} >
@@ -41,7 +41,9 @@ const Detail =()=>{
           
            {steps?.length!==0&&<div className={styles.steps} >
                                     <ul>
-                                        {detail&&steps?.map((step,index)=><li key={index}>{step}</li>)}
+                                        {detail&&steps?.map((step,index)=>{
+                                            if(step.length!==0)return <li className={styles.li} key={index}>{step}</li>
+                                            })}
                                     </ul>
                              </div>}
            

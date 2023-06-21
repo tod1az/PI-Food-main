@@ -7,12 +7,11 @@ const Card=({id,name,image,diets,healthScore})=>{
         <NavLink to={`/recipe/${id}`}>
             <div className={styles.card}>
                     <h2 className={styles.title}>{name}</h2>
+                    <p className={healthScore<35?styles.red:healthScore>=35&&healthScore<50?styles.yellow:styles.green}>Health Score:{healthScore}%</p> 
                     <img className={styles.img} src={image} alt='' />
-                    <p>Health Score:{healthScore}%</p> 
-                    <div className={styles.diets}>
-                            {diets.map((diet,index)=><p key={index}>{diet.name?diet.name:diet}</p>)}
-                    </div>
-                    
+                    <div className={styles.dietsContainer}>
+                            {diets.map((diet,index)=><p  key={index}>{diet.name?diet.name:diet}</p>)}
+                    </div>  
             </div>
         </NavLink>
     )
