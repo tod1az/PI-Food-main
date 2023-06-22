@@ -120,7 +120,9 @@ const reducer =(state = initialState,{type,payload})=>{
             const globalRecipes =[...state.recipes]
             const copyAux =[...state.auxRecipes]
             let orderedRecipes = [];
-            if(payload==='Def'&&(state.currentDiets==='All'&&state.currentSource==='All')) orderedRecipes = [...state.auxRecipes]
+            if(payload==='Def'&&(state.currentDiets==='All'&&state.currentSource==='All')) {
+                orderedRecipes = state.searchedRecipes.length!==0?[...state.searchedRecipes]:[...state.auxRecipes]
+            }
             else{
                 orderedRecipes = copyAux.filter(recipe=>{
                     if(state.currentSource==='API'||state.currentSource==='All'&&typeof recipe.id==='number'){
@@ -150,7 +152,9 @@ const reducer =(state = initialState,{type,payload})=>{
             const copyRecipes =[...state.recipes]
             const auxCopy =[...state.auxRecipes]
             let orderedByHealthScore = []
-            if(payload==='Def'&&(state.currentDiets==='All'&&state.currentSource==='All'))orderedByHealthScore = [...state.auxRecipes]
+            if(payload==='Def'&&(state.currentDiets==='All'&&state.currentSource==='All')){
+                orderedByHealthScore = state.searchedRecipes.length!==0?[...state.searchedRecipes]:[...state.auxRecipes]
+            }
             else{
                 orderedByHealthScore = auxCopy.filter(recipe=>{
                     if(state.currentSource==='API'||state.currentSource==='All'&&typeof recipe.id==='number'){

@@ -2,7 +2,8 @@ const {Diet} = require('../db')
 
 const getDiets=async()=>{
     const diets = await Diet.findAll()
-        return diets
+    if(diets.length===0)throw Error('No diets registered')    
+    return diets
 }
 
 module.exports = getDiets;

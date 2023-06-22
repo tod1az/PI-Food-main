@@ -28,12 +28,11 @@ const SearchBar =()=>{
         setNombre('')
     }
 
- 
     return(
         <div>
             <button className={styles.button} disabled={location.pathname!=='/home'&&true} onClick={resetHandler} >Reset</button>
             <input className={styles.input} disabled={location.pathname!=='/home'&&true} onChange={changeHandler} value={nombre} placeholder='Example Recipe'></input>
-            <button className={styles.button} disabled={location.pathname!=='/home'&&true} onClick={clickHandler}>Search</button>
+            <button className={styles.button} disabled={location.pathname!=='/home'||nombre===''&&true} onClick={clickHandler}>Search</button>
         </div>
     )
 }
