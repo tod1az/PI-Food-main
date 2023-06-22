@@ -59,10 +59,6 @@ const reducer =(state = initialState,{type,payload})=>{
                     if(state.currentSource==='API')recipesFiltered=allrecipes.filter(recipe=>typeof recipe.id==='number');
                     
                     if(state.currentSource==='All')recipesFiltered=allrecipes;        
-                    
-                return{
-                    ...state,recipes:recipesFiltered,currentDiets:payload
-                }
             } 
             else recipesFiltered=allrecipes.filter((recipe)=>{
                
@@ -124,21 +120,23 @@ const reducer =(state = initialState,{type,payload})=>{
                 orderedRecipes = state.searchedRecipes.length!==0?[...state.searchedRecipes]:[...state.auxRecipes]
             }
             else{
-                orderedRecipes = copyAux.filter(recipe=>{
-                    if(state.currentSource==='API'||state.currentSource==='All'&&typeof recipe.id==='number'){
-                        if(state.currentDiets==='All')return recipe
-                        else{
-                            if(recipe.diets.includes(state.currentDiets))return recipe   
-                        } 
-                            
-                    }
-                    if(state.currentSource==='DB'||state.currentSource==='All'&&typeof recipe.id!=='number'){
-                        if(state.currentDiets==='All')return recipe
-                        else {
-                            if(recipe.diets.find(diet=>diet.name===state.currentDiets))return recipe
+                if(payload ==='Def'){
+                    orderedRecipes = copyAux.filter(recipe=>{
+                        if(state.currentSource==='API'||state.currentSource==='All'&&typeof recipe.id==='number'){
+                            if(state.currentDiets==='All')return recipe
+                            else{
+                                if(recipe.diets.includes(state.currentDiets))return recipe   
+                            } 
+                                
                         }
-                    }
-                })
+                        if(state.currentSource==='DB'||state.currentSource==='All'&&typeof recipe.id!=='number'){
+                            if(state.currentDiets==='All')return recipe
+                            else {
+                                if(recipe.diets.find(diet=>diet.name===state.currentDiets))return recipe
+                            }
+                        }
+                    })
+                }
             }
             
             if(payload==='A')  orderedRecipes = globalRecipes.sort((a,b)=> a.name.localeCompare(b.name))
@@ -155,22 +153,22 @@ const reducer =(state = initialState,{type,payload})=>{
             if(payload==='Def'&&(state.currentDiets==='All'&&state.currentSource==='All')){
                 orderedByHealthScore = state.searchedRecipes.length!==0?[...state.searchedRecipes]:[...state.auxRecipes]
             }
-            else{
-                orderedByHealthScore = auxCopy.filter(recipe=>{
-                    if(state.currentSource==='API'||state.currentSource==='All'&&typeof recipe.id==='number'){
-                        if(state.currentDiets==='All')return recipe
-                        else{
-                            if(recipe.diets.includes(state.currentDiets))return recipe   
-                        } 
-                            
-                    }
-                    if(state.currentSource==='DB'||state.currentSource==='All'&&typeof recipe.id!=='number'){
-                        if(state.currentDiets==='All')return recipe
-                        else {
-                            if(recipe.diets.find(diet=>diet.name===state.currentDiets))return recipe
+            else{if(payload==='Def'){
+                    orderedByHealthScore = auxCopy.filter(recipe=>{
+                        if(state.currentSource==='API'||state.currentSource==='All'&&typeof recipe.id==='number'){
+                            if(state.currentDiets==='All')return recipe
+                            else{
+                                if(recipe.diets.includes(state.currentDiets))return recipe   
+                            }       
                         }
-                    }
-                })
+                        if(state.currentSource==='DB'||state.currentSource==='All'&&typeof recipe.id!=='number'){
+                            if(state.currentDiets==='All')return recipe
+                            else {
+                                if(recipe.diets.find(diet=>diet.name===state.currentDiets))return recipe
+                            }
+                        }
+                    })
+                }
             }
 
             if(payload==='A')  orderedByHealthScore=copyRecipes.sort((a,b)=>a.healthScore-b.healthScore);

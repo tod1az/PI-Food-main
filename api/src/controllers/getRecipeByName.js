@@ -17,9 +17,6 @@ const getRecipeByName =async(name)=>{
 const {data} = await axios.get(`${URL}&apiKey=${API_KEY}`)
 //Seleccion de datos
 const apiRecipes = data.results.map((recipe)=>recipeCleaner(recipe))
-
-
-        if(name){
                 const lowerCasedName=name.toLowerCase();
                 apiRecipesFiltered = apiRecipes.filter((recipe)=>recipe.name.toLowerCase().includes(lowerCasedName))
                 //Traer desde la base de datos 
@@ -36,10 +33,9 @@ const apiRecipes = data.results.map((recipe)=>recipeCleaner(recipe))
                                         attributes:[]
                                 }
                         }        
-                }) 
-        
+                })   
         return [...apiRecipesFiltered,...dbFound]
-        }
+      
 }
 
 

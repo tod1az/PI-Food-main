@@ -11,7 +11,7 @@ const start =async()=>{
     let diets =[];
     let results =[]
     //guarda las dietas que vienen en el array diets, ademas agrega la propiedad vegetarian si es que alguna lo trae en true.
-    results = data?.results.map((recipe)=>{
+    results = data.results.map((recipe)=>{
         if(recipe.vegetarian&&!diets.includes('vegetarian')) diets =[...diets,'vegetarian']
         recipe.diets.map((diet)=>{
             if(!diets.includes(diet)){
@@ -44,13 +44,8 @@ const start =async()=>{
     }) 
     results = [...results,...dbFound]
 
-
-    diets=diets.map((diet)=>{
-        return {name:diet}
-    })
-
     diets.map (async(diet)=>{
-       await Diet.findOrCreate({where:{name:diet.name}})
+       await Diet.findOrCreate({where:{name:diet}})
     })
 
     const dbDiets = await Diet.findAll()

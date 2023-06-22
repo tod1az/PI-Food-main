@@ -11,15 +11,15 @@ const validateRecipe =({name,image,diets,summary,steps,healthScore})=>{
     if(name===''){
         errors.name='Must have a name'
     }
-    const tieneNumeros = /^[^\d]+$/
-    if(!tieneNumeros.test(name)&&name!==''){
+    const hasNumbers = /^[^\d]+$/
+    if(!hasNumbers.test(name)&&name!==''){
         errors.name="The recipe name can not contain numbers"
     }
     if(image===''){
         errors.image='Must have an image'
     }
-    const esUrl = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/
-    if(!esUrl.test(image)){
+    const isUrl = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/
+    if(!isUrl.test(image)){
         errors.image='Must be an URL'
     }
     if(diets.length===0){

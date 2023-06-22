@@ -18,7 +18,6 @@ const  CardContainer =({currentRecipes})=>{
                             />
                           </div>
               }):
-              
               <div className={styles.card}>
                 <h1>Recipe not found</h1>
                 <img className={styles.img} src={image} alt='' />
