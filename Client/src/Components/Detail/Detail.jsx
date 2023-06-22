@@ -11,9 +11,7 @@ const Detail =()=>{
          dispatch(getById(id));
          return ()=>{
              dispatch(clenDetail())
-        } 
-        
-            
+        }        
     },[id])
     const detail = useSelector(state=>state.detail)
     const{name,summary, healthScore, image,diets,steps} = detail
@@ -21,7 +19,7 @@ const Detail =()=>{
         <div>
            <div className={styles.head}>
                 {detail&&<h1>{name}</h1>}
-                {detail&&<p className={healthScore<35?styles.red:healthScore>=35&&healthScore<50?styles.yellow:styles.green} >Health Score:{healthScore}%</p>}
+                {detail&&<p className={healthScore<35?styles.red:healthScore>=35&&healthScore<50?styles.yellow:styles.green} >Health Score:{healthScore}</p>}
            </div> 
         <div className={styles.detail}>
             <div className={styles.imageDiv} >

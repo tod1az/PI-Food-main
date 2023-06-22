@@ -30,13 +30,14 @@ const  getRecipeById =  async(id)=>{
 
         //si no funciona la api
         let cleanData = apiRecipes.map((recipe)=>recipeCleaner(recipe))
-        cleanData = cleanData.filter(recipe=>recipe.id===Number(id))
+        cleanData = cleanData.find(recipe=>recipe.id===Number(id))
    
         //si funciona la api estas dos lineas 
         // const {data} = await axios.get(`${URL}${id}/information?apiKey=${API_KEY}`)
         // const cleanData = recipeCleaner(data)
-        // return cleanData    
-        return cleanData[0]
+        
+        
+        return cleanData
     } 
 }
 module.exports = getRecipeById;

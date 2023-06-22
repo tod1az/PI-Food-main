@@ -18,6 +18,10 @@ const validateRecipe =({name,image,diets,summary,steps,healthScore})=>{
     if(image===''){
         errors.image='Must have an image'
     }
+    const esUrl = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/
+    if(!esUrl.test(image)){
+        errors.image='Must be an URL'
+    }
     if(diets.length===0){
 
         errors.diets='Must select at least one diet'
@@ -34,8 +38,6 @@ const validateRecipe =({name,image,diets,summary,steps,healthScore})=>{
     if(isNaN(healthScore)) {
         errors.healthScore ='Health Score must be a number'
     }
-    //revisar que los elementos del array tengan al menos un elemento que tenga un string dentro 
-
     let stepsFlag = false;
     steps.map(step=>{
         if(step!=='') stepsFlag=true

@@ -1,15 +1,22 @@
 import styles from './newRecipe.module.css'
 import {  useEffect, useState } from 'react'
 import {validateRecipe} from '../Validate'
-import{useDispatch,useSelector} from 'react-redux'
+import{useSelector,useDispatch} from 'react-redux'
 import {useNavigate} from 'react-router-dom'
+import {getDiets} from '../../Redux/actions'
 import axios from 'axios'
 
 
 
 const NewRecipe =()=>{
     
-   
+
+   const dispatch = useDispatch() 
+   useEffect(()=>{
+        dispatch(getDiets())
+   },[dispatch])
+
+
     const diets    = useSelector(state=>state.diets);
     const navigate = useNavigate();
     
@@ -19,7 +26,7 @@ const NewRecipe =()=>{
         steps:[''],
         diets:[],
         summary:'',
-        healthScore:0
+        healthScore:''
     })
 
     const [errors, setErrors] = useState({

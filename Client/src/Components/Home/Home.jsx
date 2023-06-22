@@ -11,22 +11,18 @@ const Home =()=>{
 
     const dietFilterHandler =(e)=>{
         dispatch(filterDiets(e.target.value))
-        paginate();
     }
 
     const sourceFilterHandler =(e)=>{
         dispatch(filterBySource(e.target.value))
-        paginate();
     }
 
     const nameOrderHandler =(e)=>{
-        dispatch(orderByName(e.target.value))
-        paginate();
+        dispatch(orderByName(e.target.value))  
     }
 
     const orderByhealthScoreHandler=(e)=>{
         dispatch(orderByHealthScore(e.target.value))
-        paginate();
     }
 
 

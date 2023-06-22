@@ -4,7 +4,7 @@ const {API_KEY} = process.env
 const {recipeCleaner} = require('../Helpers/Cleanners')
 const apiRecipes = require('../allApiRecipes')
 //este endpoint trae 100 recetas con una serie de informacion.
-const endpoint = 'https://api.spoonacular.com/recipes/complexSearch?number=100&addRecipeInformation=true'
+//const endpoint = 'https://api.spoonacular.com/recipes/complexSearch?number=100&addRecipeInformation=true'
 
 const start =async()=>{
     //const {data} = await axios.get(`${endpoint}&apiKey=${API_KEY}`)
@@ -48,6 +48,7 @@ const start =async()=>{
     diets=diets.map((diet)=>{
         return {name:diet}
     })
+
     diets.map (async(diet)=>{
        await Diet.findOrCreate({where:{name:diet.name}})
     })

@@ -14,7 +14,7 @@ const getRecipeByName =async(name)=>{
 const apiRecipes = resultsApi.map((recipe)=>recipeCleaner(recipe))
 
 //Peticion a la api de las 100 recetas con las que estamos trabajando      
-//const {data} = await axios.get(`${URL}&apiKey=${API_KEY}`)
+// const {data} = await axios.get(`${URL}&apiKey=${API_KEY}`)
 //Seleccion de datos
 //const apiRecipes = data.results.map((recipe)=>recipeCleaner(recipe))
 
