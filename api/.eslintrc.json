@@ -4,7 +4,7 @@
     "es6": true,
     "mocha": true
   },
-  "extends": "airbnb/base",
+  "extends": "standard",
   "settings": {
     "import/resolver": {
       "node": {
@@ -13,8 +13,8 @@
     }
   },
   "rules": {
-     "no-underscore-dangle": 0,
-     "no-param-reassign": 0,
-     "import/no-unresolved": 0
-   }
+    "no-underscore-dangle": 0,
+    "no-param-reassign": 0,
+    "import/no-unresolved": 0
+  }
 }
