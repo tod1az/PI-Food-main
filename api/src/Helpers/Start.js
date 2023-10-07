@@ -1,5 +1,5 @@
 const { getAllRecipes } = require('../Helpers/Recipe')
-const { saveDiets } = require('../Helpers/Diets')
+const { saveDiets, getAllDiets } = require('../Helpers/Diets')
 
 const extractDiets = (recipes) => {
   const diets = []
@@ -19,7 +19,7 @@ const getRecipesAndDiets = async () => {
 
   saveDiets(diets)
 
-  return { recipes, diets }
+  return { recipes, diets: await getAllDiets() }
 }
 
 module.exports = {
