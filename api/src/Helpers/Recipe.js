@@ -3,7 +3,7 @@ const axios = require('axios')
 require('dotenv').config()
 const { API_KEY } = process.env
 const { recipeCleaner } = require('../Helpers/Cleanners')
-
+const results = require('../allApiRecipes')
 require('dotenv').config()
 
 const addRecipe = async (name, image, summary, healthScore, steps, diets) => {
@@ -11,7 +11,10 @@ const addRecipe = async (name, image, summary, healthScore, steps, diets) => {
   if (created) {
     diets.forEach(async (diet) => await newRecipe.addDiets(diet.id))
   }
-  return { name, created }
+  return {
+    name,
+    created
+  }
 }
 
 const getRecipeFromDb = async (id) => {
@@ -28,9 +31,11 @@ const getRecipeFromDb = async (id) => {
 }
 
 const getRecipeFromApi = async (id) => {
-  const URL = 'https://api.spoonacular.com/recipes/'
-  const { data } = await axios.get(`${URL}${id}/information?apiKey=${API_KEY}`)
-  return data
+  // const URL = 'https://api.spoonacular.com/recipes/'
+  // const { data } = await axios.get(`${URL}${id}/information?apiKey=${API_KEY}`)
+  // return data
+  const recipe = results.filter((recipe) => recipe.id === id)
+  return recipe
 }
 
 const getAllRecipesFromDb = async () => {
@@ -38,9 +43,10 @@ const getAllRecipesFromDb = async () => {
 }
 
 const getAllRecipesFromApi = async () => {
-  const URL = 'https://api.spoonacular.com/recipes/complexSearch?number=100&addRecipeInformation=true'
-  const { data } = await axios.get(`${URL}&apiKey=${API_KEY}`)
-  return data.results
+  // const URL = 'https://api.spoonacular.com/recipes/complexSearch?number=100&addRecipeInformation=true'
+  // const { data } = await axios.get(`${URL}&apiKey=${API_KEY}`)
+  // return data.results
+  return results
 }
 
 const getRecipeById = async (id) => {
