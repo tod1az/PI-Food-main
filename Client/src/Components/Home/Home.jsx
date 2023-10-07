@@ -6,7 +6,8 @@ import CardContainer from '../CardContainer/CardContainer'
 
 const Home = () => {
   const dispatch = useDispatch()
-  const dietas = useSelector((state) => state.diets)
+  const diets = useSelector((state) => state.diets)
+  console.log(diets)
 
   const dietFilterHandler = (e) => {
     dispatch(filterDiets(e.target.value))
@@ -75,9 +76,9 @@ const Home = () => {
     <div className={styles.home}>
       <select onChange={dietFilterHandler}>
         <option value="All">All</option>
-        {dietas.map((diet, index) => {
+        {diets.map((diet) => {
           return (
-            <option key={index} value={diet.name}>
+            <option key={diet.id} value={diet.name}>
               {diet.name}
             </option>
           )

@@ -29,7 +29,7 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  background-image: url('./Assets/fondo.jpg');
+  background-color: #8b84da;
 }
 
 h1 {
@@ -40,7 +40,6 @@ h1 {
 button {
   border-radius: 8px;
   border: 1px solid transparent;
- 
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
@@ -50,10 +49,6 @@ button {
 }
 button:hover {
   border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
 }
 
 @media (prefers-color-scheme: light) {

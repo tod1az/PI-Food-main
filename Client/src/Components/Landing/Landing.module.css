@@ -1,3 +1,38 @@
-.landing{
-    color:black;
+.landing {
+  color: black;
+  display: flex;
+  padding: 20px;
+  justify-content: center;
+  align-items: center;
+  transition: all;
+  gap: 12rem;
+}
+
+.landing button {
+  text-decoration: none;
+  color: gainsboro;
+  font-weight: bolder;
+  font-size: x-large;
+  background-color: #464283;
+  width: 12rem;
+}
+
+.landing button:hover {
+  background-color: #00002c;
+}
+
+.landing button:active {
+  scale: 1.02;
+  transform: translate(0, 2px);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6rem;
+}
+
+img {
+  width: 300px;
 }

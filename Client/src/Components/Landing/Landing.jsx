@@ -1,12 +1,18 @@
 import styles from './Landing.module.css'
-import { NavLink } from 'react-router-dom'
+import cheff from '../../Assets/cheff.png'
+import { useNavigate } from 'react-router-dom'
 
 const Landing = () => {
+  const navigate = useNavigate()
+
   return (
-    <div className={styles.landing}>
-      <h1>Welcome to Henry Food</h1>
-      <NavLink to="/home">Enter</NavLink>
-    </div>
+    <main className={styles.landing}>
+      <div className={styles.header}>
+        <h1>Welcome to Henry Food</h1>
+        <button onClick={() => navigate('/home')}> Let's Cook </button>
+      </div>
+      <img src={cheff} alt="landingImage" />
+    </main>
   )
 }
 export default Landing
