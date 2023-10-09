@@ -4,6 +4,7 @@ import { validateRecipe } from '../Validate'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { getDiets } from '../../Redux/actions'
+import { Fragment } from 'react'
 import axios from 'axios'
 
 const NewRecipe = () => {
@@ -39,19 +40,23 @@ const NewRecipe = () => {
       setDisableSubmit(true)
     } else setDisableSubmit(false)
   }
-  //Guarda las o elimina las dietas seleccionadas
+
   const dietHandler = (e) => {
     if (e.target.checked) {
-      setRecipe({ ...recipe, diets: [...recipe.diets, { id: e.target.value, name: e.target.name }] })
-      setErrors(validateRecipe({ ...recipe, diets: [...recipe.diets, { id: e.target.value, name: e.target.name }] }))
-      disableHandler(validateRecipe({ ...recipe, diets: [...recipe.diets, { id: e.target.value, name: e.target.name }] }))
+      const newDiets = [...recipe.diets, { id: e.target.value, name: e.target.name }]
+      const modifiedRecipe = { ...recipe, diets: newDiets }
+      setRecipe(modifiedRecipe)
+      setErrors(validateRecipe(modifiedRecipe))
+      disableHandler(validateRecipe(modifiedRecipe))
     } else {
-      setRecipe({ ...recipe, diets: recipe.diets.filter((diet) => diet.id !== e.target.value) })
-      setErrors(validateRecipe({ ...recipe, diets: recipe.diets.filter((diet) => diet.id !== e.target.value) }))
-      disableHandler(validateRecipe({ ...recipe, diets: recipe.diets.filter((diet) => diet.id !== e.target.value) }))
+      const newDiets = recipe.diets.filter((diet) => diet.id !== e.target.value)
+      const modifiedRecipe = { ...recipe, diets: newDiets }
+      setRecipe(modifiedRecipe)
+      setErrors(validateRecipe(modifiedRecipe))
+      disableHandler(validateRecipe(modifiedRecipe))
     }
   }
-  //valida la info de los inputs
+
   const changeHandler = (e) => {
     setRecipe({ ...recipe, [e.target.name]: e.target.value })
     setErrors(validateRecipe({ ...recipe, [e.target.name]: e.target.value }))
@@ -69,7 +74,7 @@ const NewRecipe = () => {
     setErrors(validateRecipe({ ...recipe, steps: newSteps }))
     disableHandler(validateRecipe({ ...recipe, steps: newSteps }))
   }
-  //Se agrega un input extra por si el usuario lo requiere
+
   const addInput = () => {
     setRecipe({ ...recipe, steps: [...recipe.steps, ''] })
   }
@@ -86,6 +91,15 @@ const NewRecipe = () => {
   const submitHandler = (e) => {
     e.preventDefault()
     postHandler()
+  }
+
+  const deleteStep = (index) => {
+    if (recipe.steps.length === 1) {
+      setRecipe({ ...recipe, steps: [''] })
+    } else {
+      const newSteps = recipe.steps.filter((step, currentIndex) => index !== currentIndex)
+      setRecipe({ ...recipe, steps: newSteps })
+    }
   }
 
   return (
@@ -108,7 +122,12 @@ const NewRecipe = () => {
           </button>{' '}
         </label>
         {recipe.steps.map((step, index) => {
-          return <input placeholder="Step:example" key={index} value={step} onChange={(e) => stepsHandler(index, e)} />
+          return (
+            <div key={index} className={styles.steps}>
+              <input placeholder="Step:example" value={step} onChange={(e) => stepsHandler(index, e)} />
+              <p onClick={() => deleteStep(index)}>X</p>
+            </div>
+          )
         })}
         {errors.steps && <p className={styles.errors}>{errors.steps}</p>}
 
@@ -124,11 +143,9 @@ const NewRecipe = () => {
         <label>Diets</label>
         {diets.map((diet, index) => {
           return (
-            <div key={index + 200} className={styles.diets}>
-              <label htmlFor={diet.name} key={index + 100}>
-                {diet.name}
-              </label>
-              <input type="checkbox" key={index} onChange={dietHandler} name={diet.name} value={diet.id} />
+            <div key={index} className={styles.diets}>
+              <label htmlFor={diet.name}>{diet.name}</label>
+              <input type="checkbox" onChange={dietHandler} name={diet.name} value={diet.id} />
             </div>
           )
         })}

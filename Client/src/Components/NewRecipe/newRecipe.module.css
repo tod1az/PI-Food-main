@@ -1,29 +1,29 @@
-.form{
-    display: grid;
-    justify-content: space-evenly;   
+.form {
+  display: grid;
+  justify-content: space-evenly;
 }
-.formContainer{
-    background-color: rgb(213, 192, 195);;
-    margin-top: 100px;
-    color: black;
-    width: 350px;
-    border:4px solid black;
-    border-radius: 20px;
-    box-shadow: 18px 18px 9px #554d4e,
-    -18px -18px 9px #ffffff;;
+.formContainer {
+  background-color: #6863af;
+  margin-top: 100px;
+  color: black;
+  width: 350px;
+  border: 4px solid black;
+  border-radius: 20px;
 }
-.submit{
-    margin-top: 20px;
-    margin-bottom: 20px;
-    padding: 0.6em 1.2em;
+.submit {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 0.6em 1.2em;
 }
-.diets{
-    display: grid;
-    grid-template-rows: auto auto;
-    grid-template-columns: auto auto;
-    justify-content: space-between;
+.diets {
+  display: grid;
+  grid-template-rows: auto auto;
+  grid-template-columns: auto auto;
+  justify-content: space-between;
 }
-.errors{
-    color: red;
+.errors {
+  color: red;
 }
-
+.steps {
+  display: flex;
+}
