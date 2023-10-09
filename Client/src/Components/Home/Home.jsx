@@ -1,31 +1,18 @@
 import styles from './Home.module.css'
+import { Fragment } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { filterDiets, filterBySource, orderByName, orderByHealthScore, getAll } from '../../Redux/actions'
+import { getAll } from '../../Redux/actions'
 import { useState, useEffect } from 'react'
+import Select from '../Select/Select'
 import CardContainer from '../CardContainer/CardContainer'
+import { selectValues } from '../../lib/consts'
+import { formatDiets } from '../../lib/utils'
 
 const Home = () => {
   const dispatch = useDispatch()
-  const diets = useSelector((state) => state.diets)
-  console.log(diets)
+  let diets = useSelector((state) => state.diets)
+  const formatedDiets = formatDiets(diets)
 
-  const dietFilterHandler = (e) => {
-    dispatch(filterDiets(e.target.value))
-  }
-
-  const sourceFilterHandler = (e) => {
-    dispatch(filterBySource(e.target.value))
-  }
-
-  const nameOrderHandler = (e) => {
-    dispatch(orderByName(e.target.value))
-  }
-
-  const orderByhealthScoreHandler = (e) => {
-    dispatch(orderByHealthScore(e.target.value))
-  }
-
-  //= ========================================//
   const [disablePrevious, setDisablePrevious] = useState(true)
   const [disableNext, setDisableNext] = useState(false)
 
@@ -73,32 +60,16 @@ const Home = () => {
 
   //= ==========================================//
   return (
-    <div className={styles.home}>
-      <select onChange={dietFilterHandler}>
-        <option value="All">All</option>
-        {diets.map((diet) => {
-          return (
-            <option key={diet.id} value={diet.name}>
-              {diet.name}
-            </option>
-          )
-        })}
-      </select>
-      <select onChange={sourceFilterHandler}>
-        <option value="All">All</option>
-        <option value="API">Api</option>
-        <option value="DB">Data Base</option>
-      </select>
-      <select onChange={nameOrderHandler}>
-        <option value="Def">Default</option>
-        <option value="A">A-Z</option>
-        <option value="D">Z-A</option>
-      </select>
-      <select onChange={orderByhealthScoreHandler}>
-        <option value="Def">Default</option>
-        <option value="A">Lower Health Score To Higher</option>
-        <option value="D">Higher Health Score To lower</option>
-      </select>
+    <main className={styles.home}>
+      <Select select={formatedDiets} />
+      <>
+        {selectValues.map((select, index) => (
+          <Fragment key={index}>
+            <Select select={select} />
+          </Fragment>
+        ))}
+      </>
+
       <h1>Henry Food</h1>
       <CardContainer currentRecipes={currentRecipes} />
       {recipes.length >= 9 && (
@@ -116,7 +87,7 @@ const Home = () => {
           </button>
         </div>
       )}
-    </div>
+    </main>
   )
 }
 

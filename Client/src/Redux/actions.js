@@ -80,7 +80,7 @@ export const getDiets = () => {
   }
 }
 
-export const filterDiets = (dieta) => {
+export const filterByDiets = (dieta) => {
   return { type: FILTER_DIETS, payload: dieta }
 }
 

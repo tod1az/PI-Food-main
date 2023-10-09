@@ -24,7 +24,7 @@ const SearchBar = () => {
   }
 
   return (
-    <div>
+    <div className={styles.wrapper}>
       <button className={styles.button} disabled={location.pathname !== '/home' && true} onClick={resetHandler}>
         Reset
       </button>
