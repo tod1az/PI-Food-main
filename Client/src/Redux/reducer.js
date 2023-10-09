@@ -8,7 +8,8 @@ import {
   GET_BY_NAME,
   GET_BY_ID,
   CLEAN_DETAIL,
-  RESTORE
+  RESTORE,
+  SET_CURRENT_RECIPES
 } from './actionsType'
 
 const initialState = {
@@ -18,7 +19,8 @@ const initialState = {
   currentSource: 'All',
   currentDiets: 'All',
   diets: [],
-  detail: {}
+  detail: {},
+  currentRecipes: []
 }
 
 const reducer = (state = initialState, { type, payload }) => {
@@ -28,7 +30,11 @@ const reducer = (state = initialState, { type, payload }) => {
         ...state,
         diets: payload
       }
-
+    case SET_CURRENT_RECIPES:
+      return {
+        ...state,
+        currentRecipes: payload
+      }
     case GET_ALL:
       const { diets, recipes } = payload
 

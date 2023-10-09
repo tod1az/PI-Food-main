@@ -9,7 +9,8 @@ import {
   GET_BY_NAME,
   GET_BY_ID,
   CLEAN_DETAIL,
-  RESTORE
+  RESTORE,
+  SET_CURRENT_RECIPES
 } from './actionsType'
 
 export const getAll = () => {
@@ -94,4 +95,8 @@ export const orderByName = (orden) => {
 
 export const orderByHealthScore = (orden) => {
   return { type: ORDER_BY_HEALTHSCORE, payload: orden }
+}
+
+export const setCurrentRecipes = (currentRecipes) => {
+  return { type: SET_CURRENT_RECIPES, payload: currentRecipes }
 }
