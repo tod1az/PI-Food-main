@@ -2,16 +2,22 @@
   margin-bottom: 50px;
 }
 .button {
+  font-size: small;
   padding: 0.6em 1.2em;
   margin-bottom: 50px;
 }
 .button:disabled {
   background-color: grey;
 }
+
+.button:active {
+  transform: translate(0, 2px);
+}
+
 .selected {
-  scale: 1.2;
+  scale: 1.02;
   padding: 0.6em 1.2em;
-  background-color: aliceblue;
+  background-color: #6863af;
   color: black;
   border: 2px solid black;
 }

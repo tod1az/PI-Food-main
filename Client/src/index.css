@@ -24,10 +24,12 @@ a:hover {
 }
 
 body {
+  position: relative;
   margin: 0;
+  padding: 0;
   display: flex;
   place-items: center;
-  min-width: 320px;
+  width: 99vw;
   min-height: 100vh;
   background-color: #8b84da;
 }
@@ -43,7 +45,7 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #00002c;
   cursor: pointer;
   transition: border-color 0.25s;
 }

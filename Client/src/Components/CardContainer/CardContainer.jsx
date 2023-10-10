@@ -1,6 +1,7 @@
 import styles from './CardContainer.module.css'
 import Card from '../Card/Card'
 import image from '../../Assets/404.avif'
+import { Fragment } from 'react'
 
 const CardContainer = ({ currentRecipes }) => {
   return (
@@ -8,7 +9,7 @@ const CardContainer = ({ currentRecipes }) => {
       {currentRecipes.length > 0 ? (
         currentRecipes.map((card, index) => {
           return (
-            <div key={index}>
+            <Fragment key={index}>
               <Card
                 image={card.image}
                 id={card.id}
@@ -17,7 +18,7 @@ const CardContainer = ({ currentRecipes }) => {
                 number={card.number}
                 healthScore={card.healthScore}
               />
-            </div>
+            </Fragment>
           )
         })
       ) : (
