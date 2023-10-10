@@ -4,7 +4,6 @@ import { validateRecipe } from '../Validate'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { getDiets } from '../../Redux/actions'
-import { Fragment } from 'react'
 import axios from 'axios'
 
 const NewRecipe = () => {
