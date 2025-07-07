@@ -4,8 +4,7 @@ require('dotenv').config()
 const { API_KEY } = process.env
 const { recipeCleaner, dbRecipeCleaner } = require('../Helpers/Cleanners')
 const results = require('../allApiRecipes')
-const Recipes = require('../controllers/recipes')
-const { where, Op } = require('sequelize')
+const { Op } = require('sequelize')
 require('dotenv').config()
 
 const addRecipe = async (name, image, summary, healthScore, steps, diets) => {
@@ -19,7 +18,9 @@ const addRecipe = async (name, image, summary, healthScore, steps, diets) => {
     }
   })
   if (created) {
-    diets.forEach(async (diet) => await newRecipe.addDiets(diet.id))
+    for (let i = 0; i < diets.length; i++) {
+      await newRecipe.addDiets(diets[i].id)
+    }
   }
   return newRecipe
 
