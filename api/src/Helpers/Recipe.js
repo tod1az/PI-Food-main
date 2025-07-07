@@ -1,6 +1,5 @@
 const { Recipe, Diet } = require('../db')
 const axios = require('axios')
-require('dotenv').config()
 const { API_KEY } = process.env
 const { recipeCleaner, dbRecipeCleaner } = require('../Helpers/Cleanners')
 const results = require('../allApiRecipes')
