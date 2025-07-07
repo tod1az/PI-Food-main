@@ -1,7 +1,6 @@
 const { Router } = require('express')
 const Recipes = require('../controllers/recipes')
 const Diets = require('../controllers/diets')
-const Start = require('../controllers/start')
 
 const router = Router()
 

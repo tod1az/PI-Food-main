@@ -15,7 +15,7 @@ class Recipes {
     }
   }
 
-  static async getRecipe(req, res) {
+  static async getRecipeById(req, res) {
     const { idRecipe } = req.params
     try {
       const recipe = await getRecipeById(idRecipe)
