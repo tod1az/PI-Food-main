@@ -80,9 +80,9 @@ const NewRecipe = () => {
 
   const postHandler = async () => {
     const endpoint = 'http://localhost:3001/recipes'
-    const res = await axios.post(endpoint, recipe)
-    if (res.data.created) {
-      alert(`The recipe ${res.data.name} has been successfully added`)
+    const { data } = await axios.post(endpoint, recipe)
+    if (data.message) {
+      alert(data.message)
       navigate('/home')
     } else alert(`The recipe ${recipe.name} already exists`)
   }
