@@ -1,11 +1,15 @@
-const { getRecipeById, getAllRecipes, addRecipe } = require('../Helpers/Recipe')
+const { getRecipeById, getAllRecipes, addRecipe, getAllByName } = require('../Helpers/Recipe')
 
 class Recipes {
   static async getRecipes(req, res) {
     const { name } = req.query
     try {
-      const recipes = await getAllRecipes(name)
-      return res.status(200).json(recipes)
+      let result
+      result = name
+        ? await getAllByName(name)
+        : await getAllRecipes()
+
+      return res.status(200).json(result)
     } catch (error) {
       return res.status(500).json(error.message)
     }
@@ -17,15 +21,18 @@ class Recipes {
       const recipe = await getRecipeById(idRecipe)
       return res.status(200).json(recipe)
     } catch (error) {
-      return res.status(500).json(error.message)
+      return res.status(500).json({ error: error.message })
     }
   }
 
   static async saveRecipe(req, res) {
     const { name, image, summary, healthScore, steps, diets } = req.body
     try {
-      const creada = await addRecipe(name, image, summary, healthScore, steps, diets)
-      return res.status(200).json(creada)
+      const { dataValues } = await addRecipe(name, image, summary, healthScore, steps, diets)
+      return res.status(200).json({
+        message: `${dataValues.name}, created successfully!`,
+        recipe: dataValues
+      })
     } catch (error) {
       return res.json({ error: error.message })
     }

@@ -2,23 +2,31 @@ const { Recipe, Diet } = require('../db')
 const axios = require('axios')
 require('dotenv').config()
 const { API_KEY } = process.env
-const { recipeCleaner } = require('../Helpers/Cleanners')
+const { recipeCleaner, dbRecipeCleaner } = require('../Helpers/Cleanners')
 const results = require('../allApiRecipes')
+const Recipes = require('../controllers/recipes')
+const { where, Op } = require('sequelize')
 require('dotenv').config()
 
 const addRecipe = async (name, image, summary, healthScore, steps, diets) => {
-  const [newRecipe, created] = await Recipe.findOrCreate({ where: { name, image, summary, healthScore, steps } })
+  const [newRecipe, created] = await Recipe.findOrCreate({
+    where: {
+      name,
+      image,
+      summary,
+      healthScore,
+      steps
+    }
+  })
   if (created) {
     diets.forEach(async (diet) => await newRecipe.addDiets(diet.id))
   }
-  return {
-    name,
-    created
-  }
+  return newRecipe
+
 }
 
 const getRecipeFromDb = async (id) => {
-  return await Recipe.findOne({
+  const result = await Recipe.findOne({
     where: { id },
     include: {
       model: Diet,
@@ -28,50 +36,101 @@ const getRecipeFromDb = async (id) => {
       }
     }
   })
+  return dbRecipeCleaner(result)
 }
 
 const getRecipeFromApi = async (id) => {
   // const URL = 'https://api.spoonacular.com/recipes/'
   // const { data } = await axios.get(`${URL}${id}/information?apiKey=${API_KEY}`)
   // return data
-  const recipe = results.filter((recipe) => recipe.id === id)
-  return recipe
+
+  const recipe = results.find((recipe) => recipe.id === id)
+  if (!recipe) {
+    throw Error("not found")
+  }
+  return recipeCleaner(recipe)
 }
 
 const getAllRecipesFromDb = async () => {
-  return await Recipe.findAll()
+  let results = await Recipe.findAll({
+    include: {
+      model: Diet,
+      attributes: ['name'],
+      through: {
+        attributes: []
+      }
+    }
+  })
+  return results
+    ? results.map((recipe) => dbRecipeCleaner(recipe))
+    : []
 }
 
 const getAllRecipesFromApi = async () => {
   // const URL = 'https://api.spoonacular.com/recipes/complexSearch?number=100&addRecipeInformation=true'
   // const { data } = await axios.get(`${URL}&apiKey=${API_KEY}`)
   // return data.results
-  return results
+  return results.map((recipe) => recipeCleaner(recipe))
 }
 
 const getRecipeById = async (id) => {
   let recipe
-  if (id.includes('-')) {
+  if (isNaN(Number(id))) {
     recipe = await getRecipeFromDb(id)
   } else {
-    recipe = await getRecipeFromApi(id)
+    recipe = await getRecipeFromApi(Number(id))
   }
-  return recipeCleaner(recipe)
+  return recipe
 }
 
-const filterByName = ({ recipes, name }) => {
+const filterByName = (name) => {
   const lowerCasedName = name.toLowerCase()
-  return recipes.filter((recipe) => recipe.name.toLowerCase().includes(lowerCasedName))
+  let result = results.filter((recipe) => recipe.title.toLowerCase().includes(lowerCasedName))
+  result = result.length !== 0
+    ? result.map((recipe) => recipeCleaner(recipe))
+    : []
+  return result
 }
 
-const getAllRecipes = async (name) => {
+const dbGetByName = async (name) => {
+  let results = await Recipe.findAll({
+    where: {
+      name: {
+        [Op.iLike]: `%${name}%`
+      }
+    },
+    include: {
+      model: Diet,
+      attributes: ['name'],
+      through: {
+        attributes: []
+      }
+    }
+  })
+  return results
+    ? results.map((recipe) => dbRecipeCleaner(recipe))
+    : []
+}
+
+const getAllByName = async (name) => {
+  let dbResult = await dbGetByName(name)
+  let apiResult = filterByName(name)
+
+  const totalResult = [...dbResult, ...apiResult]
+
+  if (totalResult.length === 0) {
+    throw Error("not found")
+  }
+
+  return totalResult
+}
+
+const getAllRecipes = async () => {
+
   const dbRecipes = await getAllRecipesFromDb()
-  const apiRecipes = await getAllRecipesFromApi()
-  let recipes = [...apiRecipes, ...dbRecipes]
-  recipes = recipes.map((recipe) => recipeCleaner(recipe))
-  if (name) {
-    return filterByName({ recipes, name })
-  } else return recipes
+  let apiRecipes = await getAllRecipesFromApi()
+
+  return [...apiRecipes, ...dbRecipes]
 }
 
 module.exports = {
@@ -79,5 +138,6 @@ module.exports = {
   getRecipeById,
   getAllRecipes,
   getAllRecipesFromDb,
-  getAllRecipesFromApi
+  getAllRecipesFromApi,
+  getAllByName
 }

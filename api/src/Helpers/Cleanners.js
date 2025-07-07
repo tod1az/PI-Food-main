@@ -1,4 +1,4 @@
-// Limpia los datos del paso a paso de una receta
+
 const stepsCleaner = (analyzedInstructions) => {
   if (analyzedInstructions.length === 0) return []
   const { steps } = analyzedInstructions[0]
@@ -8,7 +8,7 @@ const stepsCleaner = (analyzedInstructions) => {
   })
   return cleanedSteps
 }
-// Limpia los datos de una receta
+
 const recipeCleaner = (recipe) => {
   let { id, title, image, summary, healthScore, analyzedInstructions, diets, vegetarian } = recipe
   const steps = stepsCleaner(analyzedInstructions)
@@ -20,7 +20,18 @@ const recipeCleaner = (recipe) => {
   return { id, name: title, image, summary, healthScore, steps, diets: allDiets }
 }
 
+const dietCleaner = (diets) => {
+  return diets.map((diet) => diet.name)
+}
+
+const dbRecipeCleaner = (recipe) => {
+  const { dataValues } = recipe
+  return { ...dataValues, diets: dietCleaner(dataValues.diets) }
+
+}
+
 module.exports = {
   stepsCleaner,
-  recipeCleaner
+  recipeCleaner,
+  dbRecipeCleaner
 }
