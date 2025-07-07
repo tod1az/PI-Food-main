@@ -13,6 +13,6 @@ router.post('/recipes', Recipes.saveRecipe)
 
 router.get('/diets', Diets.getDiets)
 
-router.get('/start', Start.getRecipesAndDiets)
+router.get('/diets/generate', Diets.generateDiets)
 
 module.exports = router
