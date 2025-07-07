@@ -4,6 +4,7 @@ const { API_KEY } = process.env
 const { recipeCleaner, dbRecipeCleaner } = require('../Helpers/Cleanners')
 const results = require('../allApiRecipes')
 const { Op } = require('sequelize')
+const ERRORS = require('../errors/errors')
 require('dotenv').config()
 
 const addRecipe = async (name, image, summary, healthScore, steps, diets) => {
@@ -46,7 +47,7 @@ const getRecipeFromApi = async (id) => {
 
   const recipe = results.find((recipe) => recipe.id === id)
   if (!recipe) {
-    throw Error("not found")
+    throw ERRORS.notFound("Recipe not found")
   }
   return recipeCleaner(recipe)
 }
@@ -119,7 +120,7 @@ const getAllByName = async (name) => {
   const totalResult = [...dbResult, ...apiResult]
 
   if (totalResult.length === 0) {
-    throw Error("not found")
+    throw ERRORS.notFound(`Recipe ${name} not found`)
   }
 
   return totalResult

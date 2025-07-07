@@ -1,9 +1,9 @@
 const { Diet } = require('../db')
-const { getAllRecipesFromApi } = require('../Helpers/Recipe')
+const ERRORS = require('../errors/errors')
 
 const getAllDiets = async () => {
   const diets = await Diet.findAll()
-  if (diets.length === 0) throw Error('No diets registered')
+  if (diets.length === 0) throw ERRORS.notFound('No diets registered')
   return diets
 }
 

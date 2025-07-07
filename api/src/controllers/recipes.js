@@ -1,40 +1,47 @@
-const { getRecipeById, getAllRecipes, addRecipe, getAllByName } = require('../Helpers/Recipe')
+const ERRORS = require('../errors/errors')
+const {
+  getRecipeById,
+  getAllRecipes,
+  addRecipe,
+  getAllByName
+} = require('../Helpers/Recipe')
+const { validateFields } = require('../Helpers/Validation')
 
 class Recipes {
-  static async getRecipes(req, res) {
+  static async getRecipes(req, res, next) {
     const { name } = req.query
     try {
-      let result
-      result = name
+      const result = name
         ? await getAllByName(name)
         : await getAllRecipes()
 
       return res.status(200).json(result)
     } catch (error) {
-      return res.status(500).json(error.message)
+      return next(error)
     }
   }
 
-  static async getRecipeById(req, res) {
+  static async getRecipe(req, res, next) {
     const { idRecipe } = req.params
     try {
       const recipe = await getRecipeById(idRecipe)
       return res.status(200).json(recipe)
     } catch (error) {
-      return res.status(500).json({ error: error.message })
+      return next(error)
     }
   }
 
-  static async saveRecipe(req, res) {
+  static async saveRecipe(req, res, next) {
     const { name, image, summary, healthScore, steps, diets } = req.body
     try {
+      validateFields(req.body)
       const { dataValues } = await addRecipe(name, image, summary, healthScore, steps, diets)
       return res.status(200).json({
         message: `${dataValues.name}, created successfully!`,
         recipe: dataValues
       })
     } catch (error) {
-      return res.json({ error: error.message })
+      return next(error)
     }
   }
 }
