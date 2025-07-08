@@ -21,9 +21,9 @@ const addRecipe = async (name, image, summary, healthScore, steps, diets) => {
     for (let i = 0; i < diets.length; i++) {
       await newRecipe.addDiets(diets[i].id)
     }
+    return newRecipe
   }
-  return newRecipe
-
+  throw ERRORS.serverError("something went wrong")
 }
 
 const getRecipeFromDb = async (id) => {
