@@ -37,7 +37,8 @@ const getRecipeFromDb = async (id) => {
       }
     }
   })
-  return dbRecipeCleaner(result)
+  if (!result) throw ERRORS.notFound(`The id:${id} is not registered`)
+  return result
 }
 
 const getRecipeFromApi = async (id) => {

@@ -12,12 +12,11 @@ const stepsCleaner = (analyzedInstructions) => {
 const recipeCleaner = (recipe) => {
   let { id, title, image, summary, healthScore, analyzedInstructions, diets, vegetarian } = recipe
   const steps = stepsCleaner(analyzedInstructions)
-  const allDiets = [...diets]
   summary = summary.replace(/<[^>]+>/g, '')
   if (vegetarian) {
-    allDiets.push('vegetarian')
+    diets.push('vegetarian')
   }
-  return { id, name: title, image, summary, healthScore, steps, diets: allDiets }
+  return { id, name: title, image, summary, healthScore, steps, diets }
 }
 
 const dietCleaner = (diets) => {
